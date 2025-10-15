@@ -46,27 +46,27 @@
                 <div class="oque-e">
                     <img src="./img/estrelinha.png" alt="estrelinha">
                     <h3>O que é?</h3>
-                    <p style="text-decoration: underline;">O que é uma API REST? -></p>
+                    <p id="oque" style="text-decoration: underline;">O que é uma API REST? -> </p>
                 </div>
                 <div class="como-usar-porque">
                     <h3>Como usar?</h3>
-                    <p style="text-decoration: underline;">Como utilizar uma API REST? -></p>
+                    <p id="como" style="text-decoration: underline;">Como utilizar uma API REST? -></p>
                 </div>
                 <div class="por-que">
                     <h3>Por que?</h3>
-                    <p style="text-decoration: underline;">Por que usar uma API REST? -></p>
+                    <p id="porque" style="text-decoration: underline;">Por que usar uma API REST? -></p>
                 </div>
                 <div class="roadmap-aprendizado">
                     <h3>Roadmap de Aprendizado</h3>
-                    <p style="text-decoration: underline;">Como aprender mais sobre APIs REST? -></p>
+                    <p id="trilha" style="text-decoration: underline;">Como aprender mais sobre APIs REST? -></p>
                 </div>
             </div>
             <div class="barra-pesquisa">
-                <input type="text" placeholder="Digite sua pergunta aqui...">
-                <button class="novo-chat d-flex justify-content-center align-items-center" style="width:100px;height:40px;background:#2400C5;color:white;border:none;"> 
+                <input type="text" id="user-input" placeholder="Digite sua pergunta aqui...">
+                <button id="new-chat" class="novo-chat d-flex justify-content-center align-items-center" style="width:100px;height:40px;background:#2400C5;color:white;border:none;"> 
                     <span>Novo Chat</span>
                 </button>
-                <button class="d-flex justify-content-center align-items-center rounded-circle" style="width:40px;height:40px;background:#2400C5;color:white;border:none;">
+                <button id="send-btn" class="d-flex justify-content-center align-items-center rounded-circle" style="width:40px;height:40px;background:#2400C5;color:white;border:none;">
                     <img src="./img/enviar.png" alt="enviar">
                 </button>
             </div>
@@ -103,12 +103,12 @@
             <div class="historico">
                 <div class="historico-limpar">
                     <h3>Histórico:</h3>
-                    <button>Limpar tudo</button>
+                    <button id="limpar-historico">Limpar tudo</button>
                 </div>
                 <!-- linha -->
                  <div class="linha-fina-hist"></div>
                 <!-- linha -->
-                <div class="perguntas-historico">
+                <div id="historico-list" class="perguntas-historico">
                     <ul>
                     <li><img src="./img/chat.png" alt="GitHub" width="20" height="20" class="me-2">O que é uma API REST?</li>
                     <li><img src="./img/chat.png" alt="GitHub" width="20" height="20" class="me-2">O que é Scrum?</li>
@@ -212,6 +212,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+  <script src="chatbot.js"></script>
 </body>
 </html>
