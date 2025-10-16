@@ -2,7 +2,7 @@
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-// ✅ USE ESTA LINHA PARA IMPORTAR O CLIENTE PRISMA
+// LINHA PARA IMPORTAR O CLIENTE PRISMA
 const prisma = require('./db'); 
 
 module.exports = function(passport) {
@@ -24,14 +24,14 @@ module.exports = function(passport) {
 
         try {
             // 1. Procurar o usuário no seu Banco de Dados
-            // 🚨 CORREÇÃO: Substitui 'User.findOne' por 'prisma.user.findUnique'
+            // CORREÇÃO: Substitui 'User.findOne' por 'prisma.user.findUnique'
             let user = await prisma.user.findUnique({ where: { googleId: profile.id } }); 
 
             if (user) {
                 done(null, user);
             } else {
                 // Usuário novo, cria e loga
-                // 🚨 CORREÇÃO: Substitui 'User.create' por 'prisma.user.create'
+                // CORREÇÃO: Substitui 'User.create' por 'prisma.user.create'
                 user = await prisma.user.create({ data: newUser }); 
                 done(null, user);
             }
