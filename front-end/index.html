@@ -171,6 +171,12 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+  <script>
+  // Adicione um script simples para redirecionar
+  document.getElementById('login-google').addEventListener('click', () => {
+    // Redireciona para a rota que inicia o processo OAuth no seu backend
+    window.location.href = '/auth/google'; 
+  });
+</script>
 </body>
 </html>
