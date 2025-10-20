@@ -3,6 +3,7 @@ const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
 require('dotenv').config(); // Carrega as variáveis de ambiente
+const chatRoutes = require('./routes/chat');
 
 const app = express();
 const PORT = 3000;
@@ -41,6 +42,10 @@ app.use(passport.session());
 
 // Importa e configura a estratégia do Google 
 require('./config/passport')(passport); 
+
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: false }));
+app.use(chatRoutes);
 
 // Servir arquivos estáticos (Frontend)
 app.use(express.static(path.join(__dirname, '..', 'front-end')));

@@ -17,4 +17,16 @@ model User {
   image       String?   @db.VarChar(512)
   createdAt   DateTime? @default(now()) @db.Timestamp(6)
   updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+
+  messages ChatMessage[]
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  content   String
+  role      String   @db.VarChar(50)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
 }
