@@ -196,16 +196,18 @@ Todas as respostas seguem o formato estruturado em 4 pontos:
 ## 🗂️ Estrutura do Projeto
 
 ```
-📦 tecnomind/
-├── 📁 src/
-│   ├── 📁 controllers/      # Controladores da aplicação
-│   ├── 📁 routes/           # Rotas da API
-│   ├── 📁 services/         # Lógica de negócio
-│   │   └── geminiService.js # Integração com Google Gemini
-│   ├── 📁 middlewares/      # Autenticação e validação
-│   ├── 📁 config/           # Configurações (OAuth, DB)
+📦 TECNOMIND/
+├── 📁 back-end/
+│   ├── 📁 config/    # Controladores da aplicação
+│   ├── 📁 node_modules/           # Rotas da API
+│   ├── 📁 prisma/         # Lógica de negócio
+│   ├── 📁 routes/      # Autenticação e validação
+│   ├── 📁 config/
+|   └── ⚙️.env
+|   └── {} package-lock.json
+|   └── {} package.json        # Configurações (OAuth, DB)
 │   └── 📄 server.js         # Ponto de entrada do servidor
-├── 📁 public/               # Arquivos estáticos
+├── 📁 front-end/               # Arquivos estáticos
 │   ├── 📁 css/              # Estilos CSS
 │   ├── 📁 js/               # Scripts JavaScript
 │   └── 📁 assets/           # Imagens e recursos
