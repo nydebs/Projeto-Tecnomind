@@ -1,23 +1,45 @@
+let initialChatBoxHTML = '';
+
 document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('send-btn');
     const userInput = document.getElementById('user-input');
     const chatBox = document.querySelector('.caixa-resposta');
     const historicoList = document.getElementById('historico-list');
-    const suggestionsBox = document.querySelector('.caixa-resposta > div');
+    const clearHistoryBtn = document.getElementById('limpar-historico');
+    const newChatBtn = document.getElementById('new-chat'); 
+
+    initialChatBoxHTML = chatBox.innerHTML;
 
     const addMessageToChat = (sender, message) => {
         const messageElement = document.createElement('div');
         messageElement.style.padding = '10px';
-        
+        messageElement.style.width = '100%';
+
         if (sender === 'user') {
             messageElement.style.textAlign = 'right';
-            messageElement.innerHTML = `<p><strong>Você:</strong> ${message}</p>`;
+            messageElement.innerHTML = `<p style="display: inline-block; padding: 10px; background-color: #e1f5fe; border-radius: 10px;"><strong>Você:</strong> ${message}</p>`;
+        
         } else {
-            messageElement.style.backgroundColor = '#f1f1f1';
-            messageElement.innerHTML = `<p><strong>Tecnomind:</strong> ${message}</p>`;
+            messageElement.style.textAlign = 'left';
+            const htmlMessage = marked.parse(message, { sanitize: true }); 
+            messageElement.innerHTML = `
+                <div style="display: inline-block; padding: 10px; background-color: #f1f1f1; border-radius: 10px; text-align: left;">
+                    <strong>Tecnomind:</strong>
+                    <div class="bot-message-content" style="margin-top: 5px;">
+                        ${htmlMessage}
+                    </div>
+                </div>`;
         }
+        
         chatBox.appendChild(messageElement);
         chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    const clearSuggestions = () => {
+        const suggestions = chatBox.querySelectorAll('.oque-e, .como-usar-porque, .por-que, .roadmap-aprendizado');
+        if (suggestions.length > 0) {
+            suggestions.forEach(el => el.remove());
+        }
     };
 
     const loadChatHistory = async () => {
@@ -33,40 +55,50 @@ document.addEventListener('DOMContentLoaded', () => {
             const history = await response.json();
             
             if (history.length > 0) {
-                chatBox.innerHTML = '';
+                clearSuggestions(); 
                 history.forEach(msg => {
                     addMessageToChat(msg.role === 'human' ? 'user' : 'bot', msg.content);
                 });
                 
-                const lastQuestion = history.filter(msg => msg.role === 'human').pop();
-                if (lastQuestion) {
-                    updateHistoricoList(lastQuestion.content);
-                }
+                history.filter(msg => msg.role === 'human').forEach(msg => {
+                    updateHistoricoList(msg.content, false); 
+                });
             }
         } catch (error) {
             console.error('Erro ao carregar histórico:', error);
         }
     };
 
-    const updateHistoricoList = (pergunta) => {
+    const updateHistoricoList = (pergunta, addToTop = true) => {
         const li = document.createElement('li');
         li.innerHTML = `<img src="./img/chat.png" alt="chat" width="20" height="20" class="me-2">${pergunta}`;
-        historicoList.querySelector('ul').prepend(li);
+        
+        const ul = historicoList.querySelector('ul');
+        if (ul) {
+             if (addToTop) {
+                ul.prepend(li);
+            } else {
+                ul.appendChild(li);
+            }
+        }
     };
 
     const handleSendChat = async () => {
         const pergunta = userInput.value.trim();
         if (!pergunta) return;
 
-        if (suggestionsBox && chatBox.contains(suggestionsBox)) {
-            chatBox.innerHTML = '';
-        }
+        clearSuggestions(); 
         
         addMessageToChat('user', pergunta);
-        updateHistoricoList(pergunta);
+        updateHistoricoList(pergunta, true); 
         userInput.value = '';
 
-        addMessageToChat('bot', 'Pensando...');
+        const thinkingMessage = document.createElement('div');
+        thinkingMessage.style.padding = '10px';
+        thinkingMessage.style.textAlign = 'left';
+        thinkingMessage.innerHTML = `<p style="display: inline-block; padding: 10px; background-color: #f1f1f1; border-radius: 10px;"><strong>Tecnomind:</strong> Pensando...</p>`;
+        chatBox.appendChild(thinkingMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
 
         try {
             const response = await fetch('/api/chat', {
@@ -75,13 +107,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ pergunta: pergunta }),
             });
 
-            chatBox.removeChild(chatBox.lastChild);
+            if (chatBox.contains(thinkingMessage)) {
+               chatBox.removeChild(thinkingMessage);
+            }
 
             if (!response.ok) {
                  if (response.status === 401) {
                     alert('Sua sessão expirou. Faça login novamente.');
                     window.location.href = '/';
-                }
+                 }
                 throw new Error('Erro na resposta do servidor');
             }
 
@@ -90,25 +124,79 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.resposta) {
                 addMessageToChat('bot', data.resposta);
             } else {
-                addMessageToChat('bot', 'Desculpe, não entendi.');
+                throw new Error(data.erro || 'Não recebi uma resposta válida.');
             }
 
         } catch (error) {
             console.error('Erro:', error);
-            addMessageToChat('bot', 'Desculpe, ocorreu um erro. Tente novamente.');
+            if (chatBox.contains(thinkingMessage)) {
+                chatBox.removeChild(thinkingMessage);
+            }
+            // Mudei a mensagem de erro aqui para ser mais genérica
+            addMessageToChat('bot', `Desculpe, ocorreu um erro: ${error.message}. Verifique o console do navegador e o log do servidor Node.js.`);
         }
     };
 
-    sendBtn.addEventListener('click', handleSendChat);
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            handleSendChat();
-        }
-    });
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', async () => {
+            if (confirm('Tem certeza que deseja limpar todo o histórico de chat?')) {
+                try {
+                    const response = await fetch('/api/chat/history', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            alert('Sua sessão expirou. Faça login novamente.');
+                            window.location.href = '/';
+                        }
+                        throw new Error('Erro ao limpar histórico no servidor.');
+                    }
+
+                    chatBox.innerHTML = initialChatBoxHTML; 
+
+                    const ul = historicoList.querySelector('ul');
+                    if (ul) {
+                        ul.innerHTML = '';
+                    }
+
+                    alert('Histórico limpo com sucesso!');
+
+                } catch (error) {
+                    console.error('Erro ao limpar histórico:', error);
+                    alert(`Não foi possível limpar o histórico: ${error.message}`);
+                }
+            }
+        });
+    }
+
+    if (newChatBtn) {
+        newChatBtn.addEventListener('click', () => {
+            chatBox.innerHTML = initialChatBoxHTML; 
+            console.log('Novo chat iniciado.');
+        });
+    }
+
+    if (sendBtn) {
+        sendBtn.addEventListener('click', handleSendChat);
+    }
+
+    if (userInput) {
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSendChat();
+            }
+        });
+    }
 
     chatBox.addEventListener('click', (e) => {
-        if (e.target && e.target.tagName === 'P' && e.target.id) {
-            const perguntaSugerida = e.target.innerText.replace('->', '').trim();
+        const suggestionElement = e.target.closest('p[id]');
+        
+        if (suggestionElement) {
+            const perguntaSugerida = suggestionElement.innerText.replace('->', '').trim();
             userInput.value = perguntaSugerida;
             handleSendChat();
         }

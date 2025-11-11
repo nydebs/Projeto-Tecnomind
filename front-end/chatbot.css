@@ -110,15 +110,16 @@ footer a:hover { color: #000; }
 }
 
 .caixa-resposta {
-    flex-direction: row;
+    display: flex;
+    flex-direction: column; 
+    overflow-y: auto;     
     margin-top: 20px;
     margin-left: 50px;
     margin-right: 50px;
-    padding-left: 30px;
-    padding-top: 20px;
+    padding: 20px;
     border: 1px solid rgba(54, 54, 54, 0.1);
     border-radius: 20px;
-    height: 50vh;
+    height: 50vh;        
     background-color: #fcfcfc;
 }
 
