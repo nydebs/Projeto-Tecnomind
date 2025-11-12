@@ -1,5 +1,5 @@
 # 🧠 Tecnomind
-Uma Plataforma de Gestão de Conhecimento e Desenvolvimento Profissional, para pesquisa de termos técnicos na área de TI, utilizando um chatbot interativo.
+Uma plataforma de Gestão do Conhecimento e Desenvolvimento Profissional, voltada para a pesquisa de termos técnicos na área de Tecnologia da Informação (TI), com o apoio de um chatbot interativo que facilita o acesso e a compreensão dos conceitos.
 <div align="center">
 <p>[Tela Inicial]</p>
   <img width="1920" height="1080" alt="Captura de tela 2025-11-05 225156" src="https://github.com/user-attachments/assets/ddf27aaf-017b-479a-86ca-4fc6da4fb7d4" />
