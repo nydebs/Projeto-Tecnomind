@@ -207,10 +207,12 @@ Todas as respostas seguem o formato estruturado em 4 pontos:
 |   └── {} package-lock.json
 |   └── {} package.json        # Configurações (OAuth, DB)
 │   └── 📄 server.js         # Ponto de entrada do servidor
-├── 📁 front-end/               # Arquivos estáticos
-│   ├── 📁 css/              # Estilos CSS
-│   ├── 📁 js/               # Scripts JavaScript
-│   └── 📁 assets/           # Imagens e recursos
+├── 📁 front-end/
+│   ├── 📁 img/             # Arquivos estáticos
+│   └── index.css
+│   └── index.html
+│   └── chatbot.css
+│   └── chatbot.html
 ├── 📁 views/                # Templates HTML
 │   ├── landing.html         # Página inicial
 │   └── chat.html            # Interface do chatbot
