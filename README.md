@@ -375,13 +375,13 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 | Membro | Papel | GitHub | LinkedIn |
 |--------|-------|--------|----------|
-| **Deborah Evelyn da Silva Lira** | Full Stack Developer | [@nydebs](https://github.com/nydebs) | [LinkedIn](www.linkedin.com/in/deborah-evelyn-da-silva-lira) |
+| **Deborah Evelyn da Silva Lira** | Full Stack Developer | [@nydebs](https://github.com/nydebs) | [LinkedIn]([www.linkedin.com/in/deborah-evelyn-da-silva-lira](https://www.linkedin.com/in/deborah-evelyn-a1b4681ba?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)) |
 | **Gabriel Fernando Tapajós Dantona** | UI/UX Designer | [@gabriel-dantona](#) | [LinkedIn](#) |
 | **Karen Heloisa Santos da Silva** | UX Designer | [@karen-silva](#) | [LinkedIn](#) |
 | **Levi de Almeida Geber** | AI Integration Specialist | [@levi-geber](#) | [LinkedIn](#) |
 | **Saymon Vieira de Brito Souza** | UX Designer | [@saymon-souza](#) | [LinkedIn](#) |
 
-**Orientadora**: Profa. Luana Magalhães Leal
+**Orientadora**: [Profa. Luana Magalhães Leal](https://github.com/ProfaLuanaLeal) 
 
 ---
 
