@@ -79,6 +79,8 @@ app.use(chatRoutes);
 
 
 app.listen(PORT, () => {
-    // O console.log agora reflete a porta correta em qualquer ambiente
-    console.log(`Servidor rodando em http://localhost:${PORT} (ou porta Render)`);
+    // ✅ CORREÇÃO: Loga a porta real (3000 localmente ou porta do Render em produção)
+    console.log(`Servidor rodando na porta ${PORT}`); 
+    // Ou para ser mais informativo:
+    // console.log(`Servidor rodando na porta ${PORT} no ambiente ${process.env.NODE_ENV || 'local'}`);
 });
