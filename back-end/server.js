@@ -8,6 +8,7 @@ const pgSession = require('connect-pg-simple')(session);
 const chatRoutes = require('./routes/chat');
 
 const app = express();
+app.set('trust proxy', 1);
 // 2. CORREÇÃO DA PORTA: Usa a porta do ambiente (Render) ou 3000 como fallback
 const PORT = process.env.PORT || 3000; 
 
