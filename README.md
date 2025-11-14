@@ -371,7 +371,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 | Membro | Papel | GitHub | LinkedIn |
 |--------|-------|--------|----------|
-| **Deborah Evelyn da Silva Lira** | Full Stack Developer | [@nydebs](https://github.com/nydebs) | [LinkedIn]([www.linkedin.com/in/deborah-evelyn-da-silva-lira](https://www.linkedin.com/in/deborah-evelyn-a1b4681ba?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)) |
+| **Deborah Evelyn da Silva Lira** | Full Stack Developer | [@nydebs](https://github.com/nydebs) | [LinkedIn](https://www.linkedin.com/in/deborah-evelyn-lira?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app) |
 | **Gabriel Fernando Tapajós Dantona** | UI/UX Designer | [@gabriel-dantona](#) | [LinkedIn](#) |
 | **Karen Heloisa Santos da Silva** | UI/UX Designer | [@karen-silva](https://github.com/karenheloisa47-code) | [LinkedIn](https://www.linkedin.com/in/karen-heloisa-santos-b185a7225?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app) |
 | **Levi de Almeida Geber** | AI Integration | [@levi-geber](#) | [LinkedIn](#) |
