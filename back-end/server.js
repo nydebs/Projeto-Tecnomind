@@ -36,11 +36,11 @@ app.use(session({
     store: sessionStore, // Usa o store definido acima
     secret: process.env.SESSION_SECRET, 
     resave: false,
-    saveUninitialized: false, // Recomendado ser 'false' para produção
+    saveUninitialized: false, 
     cookie: { 
         maxAge: 30 * 24 * 60 * 60 * 1000, 
-        // secure: true só funciona em HTTPS (Render)
-        secure: process.env.NODE_ENV === 'production' 
+        // ⚠️ CORREÇÃO: Força o secure: true para o Render
+        secure: true // ANTES ERA: process.env.NODE_ENV === 'production' 
     }
 }));
 
