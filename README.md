@@ -43,11 +43,11 @@ Segundo pesquisa da EF Education First (2023), a limitação no inglês técnico
 
 ## 🎬 Demonstração
 
-### Interface Principal
-
 <div align="center">
+  <h2 align="left">Interface Principal</h2>
   <img src="assets/landing-page.gif" alt="Landing Page">
-  <img src="assets/chatbot-page.gif" alt="Interface do Chatbot" width="45%">
+  <h2 align="left">Interface Chatbot</h2>
+  <img src="assets/chatbot-page.gif" alt="Interface do Chatbot">
   <img alt="Link do Vídeo">
 </div>
 
@@ -197,34 +197,25 @@ Todas as respostas seguem o formato estruturado em 4 pontos:
 
 ```
 📦 TECNOMIND/
-├── 📁 back-end/
-│   ├── 📁 config/    # Controladores da aplicação
-│   ├── 📁 node_modules/           # Rotas da API
-│   ├── 📁 prisma/         # Lógica de negócio
-│   ├── 📁 routes/      # Autenticação e validação
-│   ├── 📁 config/
-|   └── ⚙️.env
-|   └── {} package-lock.json
-|   └── {} package.json        # Configurações (OAuth, DB)
-│   └── 📄 server.js         # Ponto de entrada do servidor
-├── 📁 front-end/
-│   ├── 📁 img/             # Arquivos estáticos
-│   └── index.css
-│   └── index.html
-│   └── chatbot.css
-│   └── chatbot.html
-├── 📁 views/                # Templates HTML
-│   ├── landing.html         # Página inicial
-│   └── chat.html            # Interface do chatbot
-├── 📁 prisma/               # Schema e migrações do Prisma
-│   └── schema.prisma        # Modelo de dados
-├── 📁 docs/                 # Documentação adicional
-│   ├── 📁 screenshots/      # Capturas de tela
-│   └── 📁 diagrams/         # Diagramas UML
-├── 📁 tests/                # Testes automatizados
-├── 📄 package.json
-├── 📄 .env.example
-└── 📄 README.md
+├── 📁 back-end/               # 📦 Contém todo o código do servidor (API)
+│   ├── 📁 config/            # ⚙️ Configurações de ambiente, CORS, etc.
+│   ├── 📁 node_modules/      # 🧱 Módulos e dependências instaladas (gerado automaticamente)
+│   ├── 📁 prisma/            # 🗄️ Arquivos do ORM Prisma (schema e migrações do DB)
+│   ├── 📁 routes/            # 🛣️ Definição e lógica das rotas da API
+|   └── ⚙️ .env                # 🔑 Variáveis de ambiente e segredos (conexão com DB, chaves, etc.)
+|   └── 🔒 package-lock.json # 📦 Garante que as dependências instaladas sejam idênticas em todos os ambientes
+|   └── 📝 package.json      # 📄 Lista as dependências do projeto e scripts de execução
+│   └── 💻 server.js            # ▶️ Ponto de entrada principal da aplicação backend
+│    
+├── 📁 front-end/              # 🖥️ Contém todo o código da interface do usuário (UI)
+│   ├── 📁 img/              # 🖼️ Imagens, ícones, GIFs e outros ativos visuais
+│   └── 🎨 index.css            # Estilos CSS para a página inicial (landing page)
+│   └── 📄 index.html           # Estrutura principal da página inicial (landing page)
+│   └── 🎨 chatbot.css          # Estilos CSS específicos para a interface do chatbot
+│   └── 📄 chatbot.html         # Estrutura HTML da interface do chatbot
+│   └── 🧠 chatbot.js           # Lógica JavaScript do chatbot (interações, chamadas à API)
+│
+└── 🚫 .gitignore              # ⛔ Lista arquivos e pastas que o Git deve ignorar
 ```
 
 ---
@@ -235,22 +226,27 @@ Todas as respostas seguem o formato estruturado em 4 pontos:
 
 ```prisma
 model User {
-  id            String        @id @default(uuid())
-  email         String        @unique
-  name          String
-  picture       String?
-  googleId      String        @unique
-  createdAt     DateTime      @default(now())
-  chatMessages  ChatMessage[]
+  id          Int       @id @default(autoincrement())
+  googleId    String    @unique @db.VarChar(255)
+  email       String?   @unique @db.VarChar(255)
+  displayName String?   @db.VarChar(255)
+  firstName   String?   @db.VarChar(255)
+  lastName    String?   @db.VarChar(255)
+  image       String?   @db.VarChar(512)
+  createdAt   DateTime? @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamp(6)
+
+  messages ChatMessage[]
 }
 
 model ChatMessage {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  role      String   // 'user' ou 'assistant'
+  id        Int      @id @default(autoincrement())
   content   String
-  createdAt DateTime @default(now())
+  role      String   @db.VarChar(50)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
 }
 ```
 
@@ -377,9 +373,9 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 |--------|-------|--------|----------|
 | **Deborah Evelyn da Silva Lira** | Full Stack Developer | [@nydebs](https://github.com/nydebs) | [LinkedIn]([www.linkedin.com/in/deborah-evelyn-da-silva-lira](https://www.linkedin.com/in/deborah-evelyn-a1b4681ba?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)) |
 | **Gabriel Fernando Tapajós Dantona** | UI/UX Designer | [@gabriel-dantona](#) | [LinkedIn](#) |
-| **Karen Heloisa Santos da Silva** | UX Designer | [@karen-silva](#) | [LinkedIn](#) |
-| **Levi de Almeida Geber** | AI Integration Specialist | [@levi-geber](#) | [LinkedIn](#) |
-| **Saymon Vieira de Brito Souza** | UX Designer | [@saymon-souza](#) | [LinkedIn](#) |
+| **Karen Heloisa Santos da Silva** | UI/UX Designer | [@karen-silva](https://github.com/karenheloisa47-code) | [LinkedIn](https://www.linkedin.com/in/karen-heloisa-santos-b185a7225?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app) |
+| **Levi de Almeida Geber** | AI Integration | [@levi-geber](#) | [LinkedIn](#) |
+| **Saymon Vieira de Brito Souza** | UI/UX Designer | [@saymonvieiras2](https://github.com/saymonvieiras2) | [LinkedIn](https://br.linkedin.com/in/saymon-vieira-839371161) |
 
 **Orientadora**: [Profa. Luana Magalhães Leal](https://github.com/ProfaLuanaLeal) 
 
@@ -408,9 +404,9 @@ Este projeto é fundamentado em pesquisas científicas de:
 
 ## 📞 Contato
 
-**Suporte Técnico**: tecnomind.suporte@gmail.com
+**Suporte Técnico**: projetotecnomind@gmail.com
 
-**Repositório**: [github.com/tecnomind/tecnomind](https://github.com/tecnomind/tecnomind)
+**Repositório**: [github.com/nydebs/Projeto-Tecnomind](https://github.com/nydebs/Projeto-Tecnomind/)
 
 ---
 
