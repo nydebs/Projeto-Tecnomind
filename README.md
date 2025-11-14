@@ -46,8 +46,8 @@ Segundo pesquisa da EF Education First (2023), a limitação no inglês técnico
 ### Interface Principal
 
 <div align="center">
-  <img src="docs/screenshots/landing-page.png" alt="Landing Page" width="45%">
-  <img src="docs/screenshots/chatbot-interface.png" alt="Interface do Chatbot" width="45%">
+  <img src="assets/landing-page.gif" alt="Landing Page">
+  <img src="assets/chatbot-page.gif" alt="Interface do Chatbot" width="45%">
   <img alt="Link do Vídeo">
 </div>
 
