@@ -2,53 +2,64 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
-require('dotenv').config(); // Carrega as variáveis de ambiente
+require('dotenv').config(); 
+// 1. Importa o módulo do PostgreSQL Session Store
+const pgSession = require('connect-pg-simple')(session); 
 const chatRoutes = require('./routes/chat');
 
 const app = express();
-const PORT = 3000;
+// 2. CORREÇÃO DA PORTA: Usa a porta do ambiente (Render) ou 3000 como fallback
+const PORT = process.env.PORT || 3000; 
+
+// --- MÓDULOS CONDICIONAIS DE SESSÃO ---
+let sessionStore;
+
+// 3. Lógica para alternar entre MemoryStore (Local) e PgStore (Render)
+if (process.env.NODE_ENV === 'production') {
+    sessionStore = new pgSession({
+        // Usa a DATABASE_URL configurada no Render
+        conString: process.env.DATABASE_URL, 
+        tableName: 'session' // Nome da tabela criada manualmente
+    });
+} else {
+    // Para Desenvolvimento (Local)
+    sessionStore = new session.MemoryStore();
+}
+// ---------------------------------------
+
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: false }));
 
 // ----------------------------------------------------------------------
-// PASSO CRUCIAL 1: Servir Arquivos Estáticos (Frontend)
-// ----------------------------------------------------------------------
-// O 'express.static' diz ao Express para procurar arquivos estáticos
-// (HTML, CSS, Imagens) na pasta que especificar.
-// 'path.join(__dirname, '..', 'frontend')' cria o caminho absoluto para a pasta 'frontend'
-// que está um nível acima (..) da pasta 'backend'.
-app.use(express.static(path.join(__dirname, '..', 'front-end')));
-
-// ----------------------------------------------------------------------
-// PASSO CRUCIAL 2: Definir a Rota Principal (Onde o index.html será acessado)
-// ----------------------------------------------------------------------
-// Esta rota (/) é opcional, mas garante que a requisição raiz
-// direcione o navegador para o seu 'index.html'.
-// O Express é inteligente e, se você configurou o express.static corretamente,
-// ele já pode servir o index.html por padrão, mas essa rota garante o controle.
-app.get('/', (req, res) => {
-  // Envia o arquivo index.html
-  res.sendFile(path.join(__dirname, '..', 'front-end', 'index.html'));
-});
-// ----------------------------------------------------------------------
-// Configuração da Sessão
+// Configuração da Sessão (Atualizada)
 app.use(session({
-    secret: process.env.SESSION_SECRET, // string secreta
+    store: sessionStore, // Usa o store definido acima
+    secret: process.env.SESSION_SECRET, 
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false, // Recomendado ser 'false' para produção
+    cookie: { 
+        maxAge: 30 * 24 * 60 * 60 * 1000, 
+        // secure: true só funciona em HTTPS (Render)
+        secure: process.env.NODE_ENV === 'production' 
+    }
 }));
 
-// Inicializa o Passport
+// Inicializa o Passport DEPOIS da sessão
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Importa e configura a estratégia do Google 
 require('./config/passport')(passport); 
 
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: false }));
 app.use(chatRoutes);
 
-// Servir arquivos estáticos (Frontend)
+// 4. CORREÇÃO: Remova a Duplicação do express.static
 app.use(express.static(path.join(__dirname, '..', 'front-end')));
+
+// Rota Principal
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'front-end', 'index.html'));
+});
 
 // ----------------------------------------------------------------------
 // Rotas de Autenticação 
@@ -60,19 +71,18 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {
-        // Redirecionamento em caso de sucesso
         res.redirect('/chatbot.html'); 
     }
 );
 
-// Rota de Logout (para a imagem de Logout no chatbot.html)
+// Rota de Logout
 app.get('/logout', (req, res, next) => {
     req.logout((err) => {
         if (err) { return next(err); }
-        res.redirect('/'); // Redireciona para index.html (rota /)
+        res.redirect('/'); 
     });
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
