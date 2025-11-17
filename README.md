@@ -351,7 +351,6 @@ Contribuições são sempre bem-vindas! Este projeto segue a metodologia ágil c
 ### Melhorias Planejadas
 
 - ⚡ **Otimização de Performance**: Reduzir latência de resposta de 10s para <3s
-- 📚 **Expansão de Conteúdo**: Ampliar glossário para diferentes especializações de TI
 - 🎯 **IA Avançada**: Integrar recursos de personalização contextual aprimorados
 - 🌐 **Internacionalização**: Suporte multilíngue (PT-BR, EN, ES)
 - 📊 **Analytics**: Dashboard de progresso e estatísticas de aprendizado
