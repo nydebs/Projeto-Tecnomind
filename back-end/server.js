@@ -51,14 +51,14 @@ const transporter = nodemailer.createTransport({
 // ----------------------------------------------------------------------
 app.post('/api/feedback', async (req, res) => {
     // Apenas a mensagem é obrigatória
-    const { feedback, nome = 'Não Informado', email_contato = 'Não Informado' } = req.body; 
+    const { feedback, nome = 'Usuário Tecnomind', email_contato = 'Usuário Tecnomind' } = req.body; 
 
     if (!feedback || feedback.trim().length < 5) {
         return res.status(400).json({ message: 'A mensagem de feedback é muito curta.' });
     }
 
     const mailOptions = {
-        from: `"${nome} (Plataforma)" <${process.env.EMAIL_USER}>`, 
+        from: `"Notificação Tecnomind" <${process.env.EMAIL_USER}>`, 
         to: process.env.EMAIL_RECEBIMENTO, // Variável do Render para quem recebe
         subject: `Novo Feedback Recebido da Tecnomind`, 
         html: `<p><b>Mensagem:</b></p><p>${feedback}</p><p>---</p><p>Nome: ${nome}, Email: ${email_contato}</p>`
