@@ -209,7 +209,6 @@ document.getElementById('feedback-form').addEventListener('submit', function(eve
             alert('Obrigado! Seu feedback foi enviado com sucesso.');
             form.reset(); // Limpa o formulário após o sucesso
         } else {
-            // Se houver um erro de validação do Formspree
             response.json().then(data => {
                 if (data.errors) {
                     alert('Erro de validação: ' + data.errors.map(e => e.field).join(', '));
