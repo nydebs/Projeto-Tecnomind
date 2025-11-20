@@ -38,16 +38,23 @@ const nodemailer = require('nodemailer'); // 💡 Adicionar no topo com os outro
 // ----------------------------------------------------------------------
 // Configuração do Nodemailer
 // ----------------------------------------------------------------------
+// server.js - Última tentativa com o Gmail
+
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587, // MUDANÇA
-    secure: false, // MUDANÇA - DEVE ser FALSE para a porta 587
-    requireTLS: true, // Garante que a segurança STARTTLS seja usada
-    timeout: 60000, // Tenta dar mais tempo
+    // 💡 Tente o host com protocolo completo
+    host: 'smtp://smtp.gmail.com', 
+    port: 587, 
+    secure: false, 
+    requireTLS: true, 
+    // Garante que a segurança seja ativada após a conexão
+    // Tente aumentar o timeout para o limite máximo se ainda falhar
+    timeout: 90000, // 1 minuto e 30 segundos
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    // 💡 Adicionar esta opção pode ajudar a forçar o reconhecimento do host
+    name: 'https://tecnomind.onrender.com' // Use o nome do seu domínio se tiver
 });
 
 // ----------------------------------------------------------------------
