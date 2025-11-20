@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
@@ -28,61 +27,9 @@ if (process.env.NODE_ENV === 'production') {
     sessionStore = new session.MemoryStore();
 }
 // ---------------------------------------
-app.use(cors());
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
-
-// enviar feedback email 
-const nodemailer = require('nodemailer'); // 💡 Adicionar no topo com os outros 'requires'
-
-// ----------------------------------------------------------------------
-// Configuração do Nodemailer
-// ----------------------------------------------------------------------
-// server.js - Última tentativa com o Gmail
-
-// ----------------------------------------------------------------------
-// Configuração do Nodemailer - FINAL OTIMIZADA
-// ----------------------------------------------------------------------
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // 💡 CORREÇÃO: Apenas o nome do host
-    port: 587, 
-    secure: false, // Necessário para a porta 587 (STARTTLS)
-    requireTLS: true, 
-    timeout: 90000, 
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS // A senha de 16 caracteres do App Password
-    },
-    name: 'https://tecnomind.onrender.com'
-});
-
-// ----------------------------------------------------------------------
-// Rota de Envio de Feedback
-// ----------------------------------------------------------------------
-app.post('/api/feedback', async (req, res) => {
-    // Apenas a mensagem é obrigatória
-    const { feedback, nome = 'Usuário Tecnomind', email_contato = 'Usuário Tecnomind' } = req.body; 
-
-    if (!feedback || feedback.trim().length < 5) {
-        return res.status(400).json({ message: 'A mensagem de feedback é muito curta.' });
-    }
-
-    const mailOptions = {
-        from: `"Notificação Tecnomind" <${process.env.EMAIL_USER}>`, 
-        to: process.env.EMAIL_RECEBIMENTO, // Variável do Render para quem recebe
-        subject: `Novo Feedback Recebido da Tecnomind`, 
-        html: `<p><b>Mensagem:</b></p><p>${feedback}</p><p>---</p><p>Nome: ${nome}, Email: ${email_contato}</p>`
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({ message: 'Feedback enviado com sucesso.' });
-    } catch (error) {
-        console.error('Erro ao enviar e-mail:', error);
-        res.status(500).json({ message: 'Erro interno ao processar o envio de e-mail.' });
-    }
-});
-
 
 // ----------------------------------------------------------------------
 // Configuração da Sessão (Atualizada)
