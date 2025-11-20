@@ -102,7 +102,7 @@
               <textarea class="form-control mb-3" id="feedback-mensagem" name="message" rows="5" placeholder="Deixe sua mensagem ou sugestão aqui..." required></textarea>
               
               <input type="hidden" name="_subject" value="Novo Feedback da Tecnomind!">
-
+              <input type="hidden" name="_next" value="https://tecnomind.onrender.com/?feedback=sucesso">
               <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">ENVIAR</button>
           </form>
         </div>
@@ -181,6 +181,16 @@
     // Redireciona para a rota que inicia o processo OAuth no seu backend
     window.location.href = '/auth/google'; 
   });
+</script>
+<script>
+    // Verifica a URL para o parâmetro 'feedback=sucesso'
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('feedback') === 'sucesso') {
+        alert('Obrigado! Seu feedback foi enviado com sucesso.');
+        
+        // Opcional: Remove o parâmetro da URL para não aparecer mais
+        history.pushState(null, '', window.location.pathname);
+    }
 </script>
 </body>
 </html>
