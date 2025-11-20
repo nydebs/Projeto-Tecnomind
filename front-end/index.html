@@ -97,11 +97,15 @@
                     Deixe aqui sua mensagem ou sugestão e nos ajude a melhorar cada vez mais.
                 </p>
             </div>
-            <<form id="https://formspree.io/f/xdkbjqyy" method="POST" class="col-md-6" style="padding-bottom: 4rem;">
-            <textarea class="form-control mb-3" id="feedback-mensagem" name="mensagem" rows="5" placeholder="Deixe sua mensagem ou sugestão aqui..." required></textarea>
-            
-            <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">ENVIAR</button>
-        </form>
+            // index.html - Seção FEEDBACK
+
+          <form action="https://formspree.io/f/xdkbjqyy" method="POST" class="col-md-6" style="padding-bottom: 4rem;">
+              <textarea class="form-control mb-3" id="feedback-mensagem" name="message" rows="5" placeholder="Deixe sua mensagem ou sugestão aqui..." required></textarea>
+              
+              <input type="hidden" name="_subject" value="Novo Feedback da Tecnomind!">
+
+              <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">ENVIAR</button>
+          </form>
         </div>
     </section>
   </main>
