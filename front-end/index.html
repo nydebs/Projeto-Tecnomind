@@ -98,11 +98,9 @@
                 </p>
             </div>
 
-          <form action="https://formspree.io/f/xdkbjqyy" method="POST" class="col-md-6" style="padding-bottom: 4rem;">
+          <form id="feedback-form" class="col-md-6" style="padding-bottom: 4rem;">
               <textarea class="form-control mb-3" id="feedback-mensagem" name="message" rows="5" placeholder="Deixe sua mensagem ou sugestão aqui..." required></textarea>
               
-              <input type="hidden" name="_subject" value="Novo Feedback da Tecnomind!">
-              <input type="hidden" name="_next" value="https://tecnomind.onrender.com/?feedback=sucesso">
               <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">ENVIAR</button>
           </form>
         </div>
@@ -183,14 +181,49 @@
   });
 </script>
 <script>
-    // Verifica a URL para o parâmetro 'feedback=sucesso'
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('feedback') === 'sucesso') {
-        alert('Obrigado! Seu feedback foi enviado com sucesso.');
-        
-        // Opcional: Remove o parâmetro da URL para não aparecer mais
-        history.pushState(null, '', window.location.pathname);
-    }
+// URL do seu endpoint Formspree (Substitua 'SEU_ID_GERADO')
+const FORM_ENDPOINT = 'https://formspree.io/f/xdkbjqyy'; 
+
+document.getElementById('feedback-form').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+
+    const form = event.target;
+    const formData = new FormData(form);
+    
+    // Converte os dados do formulário para um objeto JSON
+    const data = Object.fromEntries(formData.entries());
+    
+    // Adiciona o campo _subject necessário para o Formspree
+    data._subject = "Novo Feedback Recebido da Tecnomind"; 
+
+    fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Obrigado! Seu feedback foi enviado com sucesso.');
+            form.reset(); // Limpa o formulário após o sucesso
+        } else {
+            // Se houver um erro de validação do Formspree
+            response.json().then(data => {
+                if (data.errors) {
+                    alert('Erro de validação: ' + data.errors.map(e => e.field).join(', '));
+                } else {
+                    alert('Erro ao enviar o feedback. Tente novamente mais tarde.');
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Erro de rede:', error);
+        alert('Erro de conexão com o servidor.');
+    });
+});
 </script>
 </body>
 </html>
