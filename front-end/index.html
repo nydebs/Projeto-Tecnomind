@@ -187,10 +187,7 @@ document.getElementById('feedback-form').addEventListener('submit', function(eve
     event.preventDefault(); // Impede o recarregamento da página
 
     const mensagem = document.getElementById('feedback-mensagem').value;
-
-    // Use a URL do seu serviço API no Render (substitua a URL)
-    const API_BASE_URL = 'https://tecnomind.onrender.com'; 
-    const endpoint = `${API_BASE_URL}/api/feedback`; 
+    const endpoint = `/api/feedback`; 
 
     fetch(endpoint, {
         method: 'POST',
@@ -198,7 +195,6 @@ document.getElementById('feedback-form').addEventListener('submit', function(eve
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-            // Você pode adicionar nome/email aqui, se tivesse inputs
             feedback: mensagem 
         }),
     })

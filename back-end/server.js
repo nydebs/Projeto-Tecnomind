@@ -38,11 +38,13 @@ const nodemailer = require('nodemailer'); // 💡 Adicionar no topo com os outro
 // Configuração do Nodemailer
 // ----------------------------------------------------------------------
 const transporter = nodemailer.createTransport({
-    // Use o serviço/host que você configurou (ex: GMail, SendGrid, etc.)
-    service: 'gmail', 
+    // Use o host e a porta explicitamente:
+    host: 'smtp.gmail.com',
+    port: 465, 
+    secure: true, // DEVE ser TRUE para a porta 465
     auth: {
-        user: process.env.EMAIL_USER, // Variável do Render
-        pass: process.env.EMAIL_PASS  // Variável do Render
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS // A senha de 16 caracteres do App Password
     }
 });
 
