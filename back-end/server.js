@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
@@ -27,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
     sessionStore = new session.MemoryStore();
 }
 // ---------------------------------------
-
+app.use(cors());
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
 
@@ -38,13 +39,14 @@ const nodemailer = require('nodemailer'); // 💡 Adicionar no topo com os outro
 // Configuração do Nodemailer
 // ----------------------------------------------------------------------
 const transporter = nodemailer.createTransport({
-    // Use o host e a porta explicitamente:
     host: 'smtp.gmail.com',
-    port: 465, 
-    secure: true, // DEVE ser TRUE para a porta 465
+    port: 587, // MUDANÇA
+    secure: false, // MUDANÇA - DEVE ser FALSE para a porta 587
+    requireTLS: true, // Garante que a segurança STARTTLS seja usada
+    timeout: 60000, // Tenta dar mais tempo
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS // A senha de 16 caracteres do App Password
+        pass: process.env.EMAIL_PASS
     }
 });
 
