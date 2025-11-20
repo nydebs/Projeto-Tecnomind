@@ -23,7 +23,7 @@ module.exports = function(passport) {
         }
 
         try {
-            // 1. Procurar o usuário no seu Banco de Dados
+            // 1. Procurar o usuário no Banco de Dados
             // CORREÇÃO: Substitui 'User.findOne' por 'prisma.user.findUnique'
             let user = await prisma.user.findUnique({ where: { googleId: profile.id } }); 
 
@@ -46,7 +46,7 @@ module.exports = function(passport) {
         done(null, user.id); 
     });
 
-    // 🚨 CORREÇÃO: Substitui 'User.findById(id).then(...)' por 'prisma.user.findUnique' com async/await
+    // CORREÇÃO: Substitui 'User.findById(id).then(...)' por 'prisma.user.findUnique' com async/await
     passport.deserializeUser(async (id, done) => {
         try {
             // Recupera o usuário do DB pelo ID armazenado na sessão
