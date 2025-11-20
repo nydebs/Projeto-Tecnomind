@@ -31,6 +31,49 @@ if (process.env.NODE_ENV === 'production') {
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
 
+// enviar feedback email 
+const nodemailer = require('nodemailer'); // 💡 Adicionar no topo com os outros 'requires'
+
+// ----------------------------------------------------------------------
+// Configuração do Nodemailer
+// ----------------------------------------------------------------------
+const transporter = nodemailer.createTransport({
+    // Use o serviço/host que você configurou (ex: GMail, SendGrid, etc.)
+    service: 'gmail', 
+    auth: {
+        user: process.env.EMAIL_USER, // Variável do Render
+        pass: process.env.EMAIL_PASS  // Variável do Render
+    }
+});
+
+// ----------------------------------------------------------------------
+// Rota de Envio de Feedback
+// ----------------------------------------------------------------------
+app.post('/api/feedback', async (req, res) => {
+    // Apenas a mensagem é obrigatória
+    const { feedback, nome = 'Não Informado', email_contato = 'Não Informado' } = req.body; 
+
+    if (!feedback || feedback.trim().length < 5) {
+        return res.status(400).json({ message: 'A mensagem de feedback é muito curta.' });
+    }
+
+    const mailOptions = {
+        from: `"${nome} (Plataforma)" <${process.env.EMAIL_USER}>`, 
+        to: process.env.EMAIL_RECEBIMENTO, // Variável do Render para quem recebe
+        subject: `Novo Feedback Recebido da Tecnomind`, 
+        html: `<p><b>Mensagem:</b></p><p>${feedback}</p><p>---</p><p>Nome: ${nome}, Email: ${email_contato}</p>`
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: 'Feedback enviado com sucesso.' });
+    } catch (error) {
+        console.error('Erro ao enviar e-mail:', error);
+        res.status(500).json({ message: 'Erro interno ao processar o envio de e-mail.' });
+    }
+});
+
+
 // ----------------------------------------------------------------------
 // Configuração da Sessão (Atualizada)
 app.use(session({
@@ -87,3 +130,5 @@ app.get('/logout', (req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
+
