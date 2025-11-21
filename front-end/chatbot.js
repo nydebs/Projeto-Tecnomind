@@ -1,5 +1,6 @@
 let initialChatBoxHTML = '';
-
+let filtroAtivo = 'sem-filtro'; 
+let filtroAtivoTexto = 'Sem Filtro';
 document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('send-btn');
     const userInput = document.getElementById('user-input');
@@ -7,6 +8,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const historicoList = document.getElementById('historico-list');
     const clearHistoryBtn = document.getElementById('limpar-historico');
     const newChatBtn = document.getElementById('new-chat'); 
+    const filtroSelect = document.getElementById('filtro-area');
+    const aplicarBtn = document.getElementById('aplicar-filtros-btn');
+    const resetarBtn = document.getElementById('resetar-filtro-btn'); // O botão de resetar de baixo
+    const resetarH3Btn = document.getElementById('resetar-filtro'); // O botão de resetar do título
+
+    // --- Funções de Filtro ---
+    const resetarFiltro = () => {
+        filtroSelect.value = 'sem-filtro';
+        filtroAtivo = 'sem-filtro';
+        filtroAtivoTexto = 'Sem Filtro';
+        console.log('Filtro resetado para: Sem Filtro');
+        alert('Filtro de área resetado. O assistente responderá sem foco em área específica.');
+    };
+
+    const aplicarFiltro = () => {
+        filtroAtivo = filtroSelect.value;
+        filtroAtivoTexto = filtroSelect.options[filtroSelect.selectedIndex].text;
+        console.log(`Filtro aplicado: ${filtroAtivoTexto} (${filtroAtivo})`);
+        alert(`O filtro de área foi definido para: ${filtroAtivoTexto}.`);
+    };
+
+    // Listeners do Filtro
+    aplicarBtn.addEventListener('click', aplicarFiltro);
+    resetarBtn.addEventListener('click', resetarFiltro);
+    resetarH3Btn.addEventListener('click', resetarFiltro);
+
+
 
     initialChatBoxHTML = chatBox.innerHTML;
 
@@ -104,7 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pergunta: pergunta }),
+                // 🚨 NOVO: INCLUIR O FILTRO ATIVO NO BODY
+                body: JSON.stringify({ 
+                    pergunta: pergunta,
+                    areaTexto: filtroAtivoTexto 
+                }),
             });
 
             if (chatBox.contains(thinkingMessage)) {

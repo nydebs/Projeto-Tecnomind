@@ -49,12 +49,27 @@ router.get('/api/chat/history', ensureAuth, async (req, res) => {
 
 router.post('/api/chat', ensureAuth, async (req, res) => {
     try {
-        const { pergunta } = req.body;
+        const { pergunta, areaTexto } = req.body;
         const userId = req.user.id;
 
         if (!pergunta) {
             return res.status(400).json({ error: 'Nenhuma pergunta fornecida' });
         }
+
+        // 1. LÓGICA DO FILTRO: Cria uma instrução de filtro
+        let filtroInstruction = '';
+        // Verifica se 'areaTexto' foi enviado e NÃO é "Sem Filtro" (case insensitive)
+        if (areaTexto && areaTexto.toLowerCase() !== 'sem filtro') {
+            filtroInstruction = `
+                Sua resposta DEVE ter foco e profundidade na área de **${areaTexto}**. 
+                Use exemplos e terminologias específicos dessa área.
+            `;
+        }
+
+        // 2. CONSTRUÇÃO DO PROMPT FINAL
+        // Concatena a instrução padrão com a instrução do filtro (se houver)
+        const finalSystemPrompt = systemPromptStr + filtroInstruction;
+
         const pastMessages = await prisma.chatMessage.findMany({
             where: { userId: userId },
             orderBy: { createdAt: 'asc' },
@@ -76,7 +91,7 @@ router.post('/api/chat', ensureAuth, async (req, res) => {
 
         const model = genAI.getGenerativeModel({
             model: "gemini-2.5-flash", 
-            systemInstruction: systemPromptStr, 
+            systemInstruction: finalSystemPrompt, 
         });
 
         const chat = model.startChat({

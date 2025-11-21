@@ -78,24 +78,29 @@
                 <p>Filtrar por</p>
                 <div class="h3-resetar">
                     <h3>Área tecnológica</h3>
-                    <button class="resetar-h3"><span>Resetar</span></button>
+                    <button class="resetar-h3" id="resetar-filtro"><span>Resetar</span></button>
                 </div>
-                <select>
-                    <option value="Ciência de Dados">Ciência de Dados</option>
+                <select id="filtro-area">
+                    <option value="sem-filtro">Sem Filtro</option>
+                    <option value="desenvolvimento-software">Desenvolvimento de Software</option>
+                    <option value="infraestrutura-redes">Infraestrutura e Redes</option>
+                    <option value="seguranca-informacao">Segurança da Informação (Cybersecurity)</option>
+                    <option value="dados-ia">Dados e Inteligência Artificial</option>
+                    <option value="gestao-estrategia">Gestão e Estratégia</option>
+                    <option value="design-experiencia">Design e Experiência</option>
+                    <option value="hardware-eletronica">Hardware, Eletrônica e Computação Física</option>
+                    <option value="areas-emergentes">Áreas Emergentes</option>
                     <option value="ux-ui">UX/UI</option>
-                    <option value="data-base">Banco de Dados</option>
-                    <option value="dev">Desenvolvimento</option>
-                    <option value="roadmap-aprendizado">Roadmap de Aprendizado</option>
                 </select>
                 <!-- linha -->
                  <div class="linha-fina"></div>
                 <!-- linha -->
 
                 <div class="resetar-aplicar">
-                    <button class="resetar">
+                    <button class="resetar" id="resetar-filtro-btn">
                         <span>Resetar</span>
                     </button>
-                    <button class="aplicar">
+                    <button class="aplicar" id="aplicar-filtros-btn">
                         <span>Aplicar Filtros</span>
                     </button>
                 </div>
