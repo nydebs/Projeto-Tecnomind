@@ -16,7 +16,7 @@
 </head>
 <body>
   <!-- ===== HEADER ===== -->
-  <header class="container py-3">
+  <header class="container py-3" id="topo-pagina">
     <div class="d-flex justify-content-between align-items-center p-3 shadow header-container rounded-4">
       <div class="logo">
         <img src="./img/logo.png" alt="logo" class="img-fluid logo-png">
@@ -53,7 +53,7 @@
         </div>
         <div class="col-md-5 texto-experiencia">
           <h1 class="fw-bold h2">Sua experiência está para começar em um clique</h1>
-          <button  class="btn btn-primary botao-gradiente mt-3 px-4 py-2 rounded-3" onclick="window.location.href='chatbot.html'">COMEÇAR</button>
+          <button  class="btn btn-primary botao-gradiente mt-3 px-4 py-2 rounded-3" onclick="solicitarLogin()">COMEÇAR</button>
         </div>
       </div>
     </section>
@@ -223,6 +223,29 @@ document.getElementById('feedback-form').addEventListener('submit', function(eve
         alert('Erro de conexão com o servidor.');
     });
 });
+
+function solicitarLogin() {
+    // 1. Exibe o alerta para o usuário
+    alert('⚠️ Para começar a usar o Tecnomind, você precisa fazer o Login com o Google!');
+    
+    // 2. Redireciona a página para o ID 'topo-pagina' (o header)
+    window.location.href = '#topo-pagina';
+    
+    // 3. Opcional: Adiciona um pequeno delay e destaque para o botão de login (melhor experiência)
+    setTimeout(() => {
+        const loginButton = document.getElementById('login-google');
+        if (loginButton) {
+            // Você pode adicionar uma classe CSS temporária para piscar o botão, por exemplo
+            loginButton.style.border = '3px solid #ff781f';
+            loginButton.style.transition = 'all 0.3s ease';
+            
+            // Remove o destaque após 2 segundos
+            setTimeout(() => {
+                loginButton.style.border = ''; // Remove o destaque
+            }, 2000); 
+        }
+    }, 100);
+}
 </script>
 </body>
 </html>
