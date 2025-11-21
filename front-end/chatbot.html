@@ -23,7 +23,7 @@
       </div>
       <div class="perfil-logout">
         <div class="perfil">
-        <img src="./img/gato.jpg" alt="perfil">
+        <img src="./img/gato.jpg" alt="perfil" id="profile-img">
       </div>
       <a href="/logout">
         <img src="./img/Logout.png" alt="Logout">
@@ -216,6 +216,45 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script src="chatbot.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const profileImgElement = document.getElementById('profile-img');
+
+    if (profileImgElement) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageUrl = urlParams.get('profileImage');
+        
+        // 🚨 NOVO: ADICIONE ESTA LINHA PARA VERIFICAR A URL LIDA
+        console.log("URL de Imagem lida do parâmetro:", imageUrl);
+
+        if (imageUrl) {
+            profileImgElement.src = imageUrl;
+            // Opcional: Limpa os parâmetros da URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }
+});
+        document.addEventListener('DOMContentLoaded', () => {
+    const profileImgElement = document.getElementById('profile-img');
+
+    if (profileImgElement) {
+        // 1. Cria um objeto URLSearchParams para ler os parâmetros da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // 2. Tenta obter a URL da imagem do perfil
+        const imageUrl = urlParams.get('profileImage');
+
+        // 3. Verifica se o parâmetro foi passado
+        if (imageUrl) {
+            // Se sim, substitui a imagem do gato pela imagem de perfil
+            profileImgElement.src = imageUrl;
+            // Opcional: Limpa os parâmetros da URL para ficar mais limpo
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+        // Se imageUrl for nulo, a imagem do gato permanece.
+    }
+});
+    </script>
 </body>
 </html>
 

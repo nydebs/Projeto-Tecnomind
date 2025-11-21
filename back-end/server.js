@@ -72,7 +72,19 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {
-        res.redirect('/chatbot.html'); 
+        // req.user só estará disponível aqui se o login for bem-sucedido.
+        if (req.user && req.user.image) {
+            const profileImage = req.user.image; 
+
+            // Redireciona para o chatbot, passando a URL da imagem como parâmetro.
+            const redirectUrl = `/chatbot.html?profileImage=${encodeURIComponent(profileImage)}`;
+            
+            return res.redirect(redirectUrl); 
+        }
+        
+        // Se por algum motivo o req.user não existir ou não tiver imagem, 
+        // apenas redireciona para a página padrão.
+        res.redirect('/chatbot.html');
     }
 );
 
