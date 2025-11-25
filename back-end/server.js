@@ -17,9 +17,17 @@ let sessionStore;
 
 // 3. Lógica para alternar entre MemoryStore (Local) e PgStore (Render)
 if (process.env.NODE_ENV === 'production') {
+    // 3A. CRIA O POOL DE CONEXÃO COM A CONFIGURAÇÃO SSL NECESSÁRIA PARA O RENDER
+    const pgPool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false // ESSENCIAL: Permite a conexão SSL com certificados do Render
+        }
+    });
+
     sessionStore = new pgSession({
-        // Usa a DATABASE_URL configurada no Render
-        conString: process.env.DATABASE_URL, 
+        // 3B. Passa o pool de conexão, que já tem a configuração SSL
+        pool: pgPool, 
         tableName: 'session' // Nome da tabela criada manualmente
     });
 } else {
