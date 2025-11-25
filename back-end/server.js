@@ -3,6 +3,7 @@ const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
 require('dotenv').config(); 
+const { Pool } = require('pg'); 
 // 1. Importa o módulo do PostgreSQL Session Store
 const pgSession = require('connect-pg-simple')(session); 
 const chatRoutes = require('./routes/chat');
