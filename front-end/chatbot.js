@@ -1,6 +1,11 @@
+// Variável para armazenar o HTML inicial da caixa de chat (sugestões)
 let initialChatBoxHTML = '';
+// Novo: Cache global para armazenar perguntas e respostas completas, indexadas pelo ID da pergunta do usuário (role 'human').
+let conversationCache = {}; 
+
 let filtroAtivo = 'sem-filtro'; 
 let filtroAtivoTexto = 'Sem Filtro';
+
 document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('send-btn');
     const userInput = document.getElementById('user-input');
@@ -10,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const newChatBtn = document.getElementById('new-chat'); 
     const filtroSelect = document.getElementById('filtro-area');
     const aplicarBtn = document.getElementById('aplicar-filtros-btn');
-    const resetarBtn = document.getElementById('resetar-filtro-btn'); // O botão de resetar de baixo
-    const resetarH3Btn = document.getElementById('resetar-filtro'); // O botão de resetar do título
+    const resetarBtn = document.getElementById('resetar-filtro-btn');
+    const resetarH3Btn = document.getElementById('resetar-filtro');
 
-    // --- Funções de Filtro ---
+    // --- Funções de Filtro (Mantidas) ---
     const resetarFiltro = () => {
         filtroSelect.value = 'sem-filtro';
         filtroAtivo = 'sem-filtro';
@@ -34,10 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
     resetarBtn.addEventListener('click', resetarFiltro);
     resetarH3Btn.addEventListener('click', resetarFiltro);
 
-
-
+    // Salva a estrutura inicial da caixa de chat (sugestões)
     initialChatBoxHTML = chatBox.innerHTML;
 
+    // Função auxiliar para renderizar mensagens no chat principal
     const addMessageToChat = (sender, message) => {
         const messageElement = document.createElement('div');
         messageElement.style.padding = '10px';
@@ -49,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         } else {
             messageElement.style.textAlign = 'left';
+            // Usa marked.js para renderizar Markdown (negrito, listas, etc.)
             const htmlMessage = marked.parse(message, { sanitize: true }); 
             messageElement.innerHTML = `
                 <div style="display: inline-block; padding: 10px; background-color: #f1f1f1; border-radius: 10px; text-align: left;">
@@ -63,13 +69,40 @@ document.addEventListener('DOMContentLoaded', () => {
         chatBox.scrollTop = chatBox.scrollHeight;
     };
 
+    // Função que limpa as sugestões iniciais
     const clearSuggestions = () => {
         const suggestions = chatBox.querySelectorAll('.oque-e, .como-usar-porque, .por-que, .roadmap-aprendizado');
         if (suggestions.length > 0) {
             suggestions.forEach(el => el.remove());
         }
     };
+    
+    // NOVO: Função para exibir a conversa a partir do cache
+    const displayCachedConversation = (conversation) => {
+        chatBox.innerHTML = ''; // Limpa a área de chat (remove sugestões)
+        addMessageToChat('user', conversation.user);
+        addMessageToChat('bot', conversation.bot);
+    };
 
+
+    // MODIFICADO: Função para atualizar a lista do histórico, agora recebendo o ID da mensagem
+    const updateHistoricoList = (pergunta, messageId, addToTop = true) => {
+        const li = document.createElement('li');
+        // NOVO: Armazena o ID da mensagem do banco de dados
+        li.setAttribute('data-message-id', messageId); 
+        li.innerHTML = `<img src="./img/chat.png" alt="chat" width="20" height="20" class="me-2">${pergunta}`;
+        
+        const ul = historicoList.querySelector('ul');
+        if (ul) {
+            if (addToTop) {
+                ul.prepend(li);
+            } else {
+                ul.appendChild(li);
+            }
+        }
+    };
+
+    // MODIFICADO: Função para carregar histórico e popular o cache e o sidebar
     const loadChatHistory = async () => {
         try {
             const response = await fetch('/api/chat/history');
@@ -82,35 +115,52 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const history = await response.json();
             
+            // Limpa o cache e o histórico visual antes de recarregar
+            conversationCache = {}; 
+            const ul = historicoList.querySelector('ul');
+            if (ul) ul.innerHTML = '';
+            
             if (history.length > 0) {
-                clearSuggestions(); 
-                history.forEach(msg => {
-                    addMessageToChat(msg.role === 'human' ? 'user' : 'bot', msg.content);
-                });
+                // Itera sobre o histórico para parear a pergunta (human) com a resposta (ai)
+                for (let i = 0; i < history.length; i++) {
+                    const currentMsg = history[i];
+                    
+                    if (currentMsg.role === 'human') {
+                        const userMsg = currentMsg;
+                        const nextMsg = history[i + 1];
+                        
+                        // Garante que a próxima mensagem é a resposta e pertence à mesma conversação
+                        if (nextMsg && nextMsg.role === 'ai') {
+                            const botMsg = nextMsg;
+
+                            // 1. Armazena o par completo no cache
+                            conversationCache[userMsg.id] = {
+                                user: userMsg.content,
+                                bot: botMsg.content
+                            };
+                            
+                            // 2. Adiciona a pergunta ao histórico do sidebar com o ID
+                            updateHistoricoList(userMsg.content, userMsg.id, false); 
+                            
+                            i++; // Pula a mensagem 'ai' pois já foi processada como parte do par
+                        } else {
+                            // Adiciona a pergunta mesmo sem resposta, mas não será clicável para ver o conteúdo
+                            // updateHistoricoList(userMsg.content, userMsg.id, false); 
+                            console.warn(`Mensagem de usuário ID ${userMsg.id} sem resposta de bot pareada.`);
+                        }
+                    }
+                }
                 
-                history.filter(msg => msg.role === 'human').forEach(msg => {
-                    updateHistoricoList(msg.content, false); 
-                });
+                // NOTA: Removemos a exibição automática da última conversa no chat principal.
+                // A tela principal deve manter o initialChatBoxHTML (sugestões) ou o último chat se for um 'Novo Chat'
+                // ou o chat selecionado pelo clique.
             }
         } catch (error) {
             console.error('Erro ao carregar histórico:', error);
         }
     };
 
-    const updateHistoricoList = (pergunta, addToTop = true) => {
-        const li = document.createElement('li');
-        li.innerHTML = `<img src="./img/chat.png" alt="chat" width="20" height="20" class="me-2">${pergunta}`;
-        
-        const ul = historicoList.querySelector('ul');
-        if (ul) {
-             if (addToTop) {
-                ul.prepend(li);
-            } else {
-                ul.appendChild(li);
-            }
-        }
-    };
-
+    // --- Tratamento de Envio de Nova Mensagem (handleSendChat Mantido) ---
     const handleSendChat = async () => {
         const pergunta = userInput.value.trim();
         if (!pergunta) return;
@@ -118,7 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
         clearSuggestions(); 
         
         addMessageToChat('user', pergunta);
-        updateHistoricoList(pergunta, true); 
+        // NOVO: Chamada para updateHistoricoList com um ID temporário (0) por enquanto,
+        // até que o ID real seja retornado pelo backend (se for o caso)
+        // Por hora, apenas exibe a pergunta no topo do histórico
+        updateHistoricoList(pergunta, 0, true); 
         userInput.value = '';
 
         const thinkingMessage = document.createElement('div');
@@ -132,7 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                // 🚨 NOVO: INCLUIR O FILTRO ATIVO NO BODY
                 body: JSON.stringify({ 
                     pergunta: pergunta,
                     areaTexto: filtroAtivoTexto 
@@ -148,15 +200,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Sua sessão expirou. Faça login novamente.');
                     window.location.href = '/';
                  }
-                throw new Error('Erro na resposta do servidor');
+                 throw new Error('Erro na resposta do servidor');
             }
 
             const data = await response.json();
             
             if (data.resposta) {
                 addMessageToChat('bot', data.resposta);
+                
+                // Melhoria: Se o backend retornar os IDs do par Q&A recém-criado, 
+                // você pode atualizar o histórico aqui e o cache.
+                // Exemplo (requer backend alterado): 
+                /* const novoIdPergunta = data.messageId; 
+                const novoIdResposta = data.responseId;
+                
+                // Atualiza o cache e o item na lista (se necessário)
+                conversationCache[novoIdPergunta] = { user: pergunta, bot: data.resposta };
+                const tempLi = historicoList.querySelector(`li[data-message-id="0"]`);
+                if (tempLi) {
+                    tempLi.setAttribute('data-message-id', novoIdPergunta);
+                }
+                */
             } else {
-                throw new Error(data.erro || 'Não recebi uma resposta válida.');
+                 throw new Error(data.erro || 'Não recebi uma resposta válida.');
             }
 
         } catch (error) {
@@ -164,37 +230,73 @@ document.addEventListener('DOMContentLoaded', () => {
             if (chatBox.contains(thinkingMessage)) {
                 chatBox.removeChild(thinkingMessage);
             }
-            // Mudei a mensagem de erro aqui para ser mais genérica
-            addMessageToChat('bot', `Desculpe, ocorreu um erro: ${error.message}. Verifique o console do navegador e o log do servidor Node.js.`);
+            addMessageToChat('bot', `Desculpe, ocorreu um erro: ${error.message}.`);
         }
     };
 
+
+    // --- Event Listeners (Mantidos e Adicionados) ---
+    if (sendBtn) {
+        sendBtn.addEventListener('click', handleSendChat);
+    }
+
+    if (userInput) {
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSendChat();
+            }
+        });
+    }
+
+    // Listener para as sugestões iniciais
+    chatBox.addEventListener('click', (e) => {
+        const suggestionElement = e.target.closest('p[id]');
+        
+        if (suggestionElement) {
+            const perguntaSugerida = suggestionElement.innerText.replace('->', '').trim();
+            userInput.value = perguntaSugerida;
+            handleSendChat();
+        }
+    });
+    
+    // NOVO: Listener para clicar em um item do histórico
+    historicoList.addEventListener('click', (e) => {
+        const listItem = e.target.closest('li');
+        
+        if (listItem) {
+            const messageId = listItem.getAttribute('data-message-id');
+            const conversation = conversationCache[messageId];
+            
+            if (conversation) {
+                displayCachedConversation(conversation);
+            } else if (messageId !== '0') {
+                console.warn(`Conversa com ID ${messageId} não encontrada no cache.`);
+                alert('Esta conversa não está completa no cache local.');
+            }
+        }
+    });
+
+
+    // --- Limpar Histórico e Novo Chat (Mantidos) ---
     if (clearHistoryBtn) {
         clearHistoryBtn.addEventListener('click', async () => {
             if (confirm('Tem certeza que deseja limpar todo o histórico de chat?')) {
                 try {
-                    const response = await fetch('/api/chat/history', {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    });
+                    // ... (código DELETE no backend) ...
+                    const response = await fetch('/api/chat/history', { method: 'DELETE' });
 
                     if (!response.ok) {
-                        if (response.status === 401) {
+                         if (response.status === 401) {
                             alert('Sua sessão expirou. Faça login novamente.');
                             window.location.href = '/';
-                        }
-                        throw new Error('Erro ao limpar histórico no servidor.');
+                         }
+                         throw new Error('Erro ao limpar histórico no servidor.');
                     }
-
+                    // Limpa o cache e a UI
+                    conversationCache = {};
                     chatBox.innerHTML = initialChatBoxHTML; 
-
                     const ul = historicoList.querySelector('ul');
-                    if (ul) {
-                        ul.innerHTML = '';
-                    }
-
+                    if (ul) ul.innerHTML = '';
                     alert('Histórico limpo com sucesso!');
 
                 } catch (error) {
@@ -212,27 +314,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (sendBtn) {
-        sendBtn.addEventListener('click', handleSendChat);
-    }
-
-    if (userInput) {
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleSendChat();
-            }
-        });
-    }
-
-    chatBox.addEventListener('click', (e) => {
-        const suggestionElement = e.target.closest('p[id]');
-        
-        if (suggestionElement) {
-            const perguntaSugerida = suggestionElement.innerText.replace('->', '').trim();
-            userInput.value = perguntaSugerida;
-            handleSendChat();
-        }
-    });
-
+    // Carrega histórico ao iniciar a página
     loadChatHistory();
 });
