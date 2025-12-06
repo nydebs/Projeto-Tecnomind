@@ -422,7 +422,40 @@ select{
      margin-left: 20px;
 }
 
+/* --- Estilos dos Itens da Pergunta --- */
+.perguntas-historico ul li {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    margin-bottom: 5px; /* Espaço menor entre os itens */
+    border-radius: 6px;
+    cursor: pointer; 
+    
+    /* Transição suave para o hover */
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out; 
+    
+    /* Configuração padrão */
+    background-color: transparent; 
+    color: #444444; 
+    font-size: 0.95rem;
+    font-weight: 500;
+}
 
+/* --- Efeito HOVER Simples --- */
+.perguntas-historico ul li:hover {
+    /* Mudar para um azul claro e suave */
+    background-color: #d7d7ff; /* Cor muito clara, quase branca, com toque de azul */
+    
+    /* Leve destaque no texto */
+    color: #1a0080;
+}
+
+/* --- Ajuste no Ícone do Chat --- */
+.perguntas-historico ul li img {
+    margin-right: 10px;
+    /* Garante que o ícone não mude de cor */
+    transition: none; 
+}
 
 
 
