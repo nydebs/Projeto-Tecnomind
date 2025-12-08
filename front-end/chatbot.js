@@ -206,21 +206,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             
             if (data.resposta) {
-                addMessageToChat('bot', data.resposta);
+                // Separa a explicação didática do JSON de recomendação
+                const partes = data.resposta.split('JSON_RECOMENDACAO:');
+                const respostaDidatica = partes[0].trim();
                 
-                // Melhoria: Se o backend retornar os IDs do par Q&A recém-criado, 
-                // você pode atualizar o histórico aqui e o cache.
-                // Exemplo (requer backend alterado): 
-                /* const novoIdPergunta = data.messageId; 
-                const novoIdResposta = data.responseId;
-                
-                // Atualiza o cache e o item na lista (se necessário)
-                conversationCache[novoIdPergunta] = { user: pergunta, bot: data.resposta };
-                const tempLi = historicoList.querySelector(`li[data-message-id="0"]`);
-                if (tempLi) {
-                    tempLi.setAttribute('data-message-id', novoIdPergunta);
+                // Exibe a resposta didática no chat principal 
+                addMessageToChat('bot', respostaDidatica);
+
+                // Processa a recomendação dinâmica para os cards 
+                if (partes[1]) {
+                    try {
+                        const recomendacao = JSON.parse(partes[1].trim());
+                        atualizarCardsDinamicos(recomendacao);
+                    } catch (e) {
+                        console.error("Erro ao processar JSON de recomendação:", e);
+                    }
                 }
-                */
             } else {
                  throw new Error(data.erro || 'Não recebi uma resposta válida.');
             }
@@ -313,7 +314,36 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Novo chat iniciado.');
         });
     }
+// Mapeamento de imagens estáticas por categoria
+const imagensEstaticas = {
+    'FRONT-END': './img/frontend.png',
+    'BACK-END': './img/backend.png',
+    'DADOS': './img/dados.png',
+    'SEGURANÇA': './img/security.png',
+    'UX-UI': './img/uxui.png',
+    'INFRA': './img/infra.png'
+};
 
+function atualizarCardsDinamicos(dadosJson) {
+    const card = document.getElementById('card-recomendado'); // Adicione este ID no seu HTML
+    const linkElement = document.getElementById('link-artigo-ia');
+    // 1. Define a imagem estática baseada na categoria vinda da IA
+    const rotaImagem = imagensEstaticas[dadosJson.categoria] || './img/imgpadrao.png';
+    
+    // 2. Atualiza o conteúdo do Card 1 (Principal)
+    card.querySelector('img').src = rotaImagem;
+    card.querySelector('h3').innerText = dadosJson.titulo;
+    card.querySelector('p').innerText = dadosJson.resumo;
+
+// Define o link real apenas agora
+    if (linkElement) {
+        linkElement.href = dadosJson.link;
+    }
+
+    // 3. Torna o card clicável para o link recomendado pelo Gemini
+    card.style.cursor = 'pointer';
+    card.onclick = () => window.open(dadosJson.link, '_blank');
+}
     // Carrega histórico ao iniciar a página
     loadChatHistory();
 });

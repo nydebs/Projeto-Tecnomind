@@ -22,8 +22,20 @@ sua resposta DEVE seguir esta estrutura de 4 partes, usando Markdown:
 **4. Mapa de aprendizado:**
 [Um pequeno roteiro (3-5 passos) de o que estudar para dominar o assunto.]
 
+Ao final da resposta, você DEVE recomendar um conteúdo extra no formato JSON abaixo, escolhendo uma dessas CATEGORIAS: [FRONT-END, BACK-END, DADOS, SEGURANÇA, UX-UI, INFRA].
+O link deve ser de um site confiável (MDN, Alura, Dev.to ou documentação oficial).
+
+JSON_RECOMENDACAO:
+{
+  "categoria": "NOME_DA_CATEGORIA",
+  "titulo": "Título do Artigo",
+  "resumo": "Resumo de exatamente 20 palavras sobre o conteúdo relacionado.",
+  "link": "URL_DO_ARTIGO"
+}
+  
 Se a pergunta for uma saudação, uma continuação de conversa ou qualquer outra coisa que não seja uma definição de termo, 
 responda de forma natural e prestativa, sem usar o formato de 4 pontos.
+
 `;
 
 function ensureAuth(req, res, next) {

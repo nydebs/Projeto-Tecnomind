@@ -376,11 +376,9 @@ select{
     flex-direction: column;
 }
 
-.artigo-container h2{
+.artigo-container h3{
     font-size: clamp(1.5rem, 4vw, 2rem);
     font-weight: 600;
-    margin-bottom: 2rem;
-    margin-bottom: 40px;
 
     /* Garanta altura adequada */
     line-height: 1.3;       /* ou normal */
@@ -408,10 +406,6 @@ select{
     height: 25vh;
 }
 
-.artigo1 h3, .artigo2 h3, .artigo3 h3{
-    margin-left: 20px;
-    margin-top: 10px;
-}
 
 .artigo1 h3, .artigo2 h3, .artigo3 h3{
     font-size: clamp(1rem, 2.5vw, 1.2rem);
@@ -419,9 +413,15 @@ select{
 }
 .artigo1 p, .artigo2 p, .artigo3 p{
      font-size: clamp(0.9rem, 2vw, 1rem);
-     margin-left: 20px;
 }
-
+#card-recomendado {
+    cursor: pointer;
+}
+#card-recomendado:hover {
+    transform: translateY(-5px);
+    border: 1px solid #2400C5;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
 /* --- Estilos dos Itens da Pergunta --- */
 .perguntas-historico ul li {
     display: flex;
