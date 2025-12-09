@@ -22,20 +22,21 @@ sua resposta DEVE seguir esta estrutura de 4 partes, usando Markdown:
 **4. Mapa de aprendizado:**
 [Um pequeno roteiro (3-5 passos) de o que estudar para dominar o assunto.]
 
-Ao final da resposta, recomende obrigatoriamente 3 conteúdos extras no formato JSON abaixo, em uma lista única, escolhendo uma dessas CATEGORIAS: [FRONT-END, BACK-END, DADOS, SEGURANÇA, UX-UI, INFRA].
+Ao final da resposta, recomende obrigatoriamente 3 recomendações de artigos reais no formato JSON abaixo, em uma lista única, escolhendo uma dessas CATEGORIAS: [FRONT-END, BACK-END, DADOS, SEGURANÇA, UX-UI, INFRA].
 Certifique-se de que o resumo tenha cerca de 20 palavras.
 **DIRETRIZ DE RECOMENDAÇÃO (JSON):**
 Para os links no campo "link", você deve atuar como um validador de referências. 
 1. NÃO INVENTE URLs baseadas em nomes.
-2. PRIORIZE documentações oficiais (ex: react.dev, docs.microsoft.com, developer.mozilla.org).
-3. Se não tiver certeza de um link específico para o termo, forneça um link de busca qualificada no MDN ou Stack Overflow focado na área tecnologia do usuário.
-4. O resumo DEVE descrever o que o link contém especificamente, facilitando a internalização do conhecimento conforme o ciclo SECI[cite: 46].
+2. PRIORIZE documentações oficiais.
+3. NÃO se limite a domínios específicos. Explore documentações oficiais (ex: react.dev, nodejs.org), blogs de engenharia (ex: Netflix Tech Blog) e portais educacionais globais (ex: MDN, W3Schools, Dev.to).
+4. Verifique mentalmente se o link é funcional. Evite URLs genéricas como 'site.com/termo'.
+5. O resumo DEVE descrever o que o link contém especificamente, facilitando a internalização do conhecimento conforme o ciclo SECI[cite: 46].
 
 JSON_RECOMENDACAO:
 [
-  { "categoria": "ESCOLHA_DA_LISTA", "titulo": "Título Real", "resumo": "R1", "link": "URL_VALIDADA" },
-  { "categoria": "ESCOLHA_DA_LISTA", "titulo": "Título Real", "resumo": "R2", "link": "URL_VALIDADA" },
-  { "categoria": "ESCOLHA_DA_LISTA", "titulo": "Título Real", "resumo": "R3", "link": "URL_VALIDADA" }
+  { "categoria": "ESCOLHA_DA_LISTA", "titulo": "Título Real do Artigo", "resumo": "R1", "link": "URL_VALIDADA" },
+  { "categoria": "ESCOLHA_DA_LISTA", "titulo": "Título Real do Artigo", "resumo": "R2", "link": "URL_VALIDADA" },
+  { "categoria": "ESCOLHA_DA_LISTA", "titulo": "Título Real do Artigo", "resumo": "R3", "link": "URL_VALIDADA" }
 ]
 
 Se a pergunta for uma saudação, uma continuação de conversa ou qualquer outra coisa que não seja uma definição de termo, 
