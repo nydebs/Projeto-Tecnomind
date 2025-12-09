@@ -324,25 +324,34 @@ const imagensEstaticas = {
     'INFRA': './img/infra.png'
 };
 
-function atualizarCardsDinamicos(dadosJson) {
-    const card = document.getElementById('card-recomendado'); // Adicione este ID no seu HTML
-    const linkElement = document.getElementById('link-artigo-ia');
-    // 1. Define a imagem estática baseada na categoria vinda da IA
-    const rotaImagem = imagensEstaticas[dadosJson.categoria] || './img/imgpadrao.png';
-    
-    // 2. Atualiza o conteúdo do Card 1 (Principal)
-    card.querySelector('img').src = rotaImagem;
-    card.querySelector('h3').innerText = dadosJson.titulo;
-    card.querySelector('p').innerText = dadosJson.resumo;
+function atualizarCardsDinamicos(listaDados) {
+    // Seleciona todos os cards pela classe (deve haver 3 no seu HTML)
+    const cards = document.querySelectorAll('.card_recomendado'); 
 
-// Define o link real apenas agora
-    if (linkElement) {
-        linkElement.href = dadosJson.link;
-    }
+    listaDados.forEach((dadosItem, index) => {
+        // Verifica se o card correspondente ao índice existe no DOM
+        if (cards[index]) {
+            const currentCard = cards[index];
+            
+            // 1. Define a imagem estática baseada na categoria 
+            const rotaImagem = imagensEstaticas[dadosItem.categoria] || './img/imgpadrao.png';
+            
+            // 2. Atualiza o conteúdo visual dentro do card atual [cite: 181]
+            currentCard.querySelector('.card-img').src = rotaImagem;
+            currentCard.querySelector('.card-title').innerText = dadosItem.titulo;
+            currentCard.querySelector('.card-text').innerText = dadosItem.resumo;
 
-    // 3. Torna o card clicável para o link recomendado pelo Gemini
-    card.style.cursor = 'pointer';
-    card.onclick = () => window.open(dadosJson.link, '_blank');
+            // 3. Configura o link de redirecionamento no stretched-link [cite: 187, 190]
+            const linkBtn = currentCard.querySelector('.card-link');
+            if (linkBtn) {
+                linkBtn.href = dadosItem.link;
+                // Como você usa stretched-link, clicar no card já acionará este link
+            }
+
+            // 4. Feedback visual de interatividade (UX) [cite: 164, 204]
+            currentCard.style.cursor = 'pointer';
+        }
+    });
 }
     // Carrega histórico ao iniciar a página
     loadChatHistory();
