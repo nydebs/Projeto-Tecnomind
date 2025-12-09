@@ -359,6 +359,12 @@ select{
     margin-top: 5px;
 }
 
+.perguntas-historico{
+    max-height: 40vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
 .perguntas-historico ul{
     list-style: none;   /* remove os pontos */
     padding: 0;         /* opcional: tira o recuo padrão */
