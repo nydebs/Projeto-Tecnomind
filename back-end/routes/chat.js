@@ -24,7 +24,8 @@ sua resposta DEVE seguir esta estrutura de 4 partes, usando Markdown:
 
 Ao final da resposta, recomende obrigatoriamente 3 conteúdos extras no formato JSON abaixo, em uma lista única, escolhendo uma dessas CATEGORIAS: [FRONT-END, BACK-END, DADOS, SEGURANÇA, UX-UI, INFRA].
 Certifique-se de que o resumo tenha cerca de 20 palavras.
-O link deve ser de um site confiável (MDN, Alura, Dev.to ou documentação oficial).
+IMPORTANTE: Não se limite a sites específicos. Busque links de documentações oficiais, blogs técnicos renomados (ex: Medium, Dev.to, FreeCodeCamp), ou portais de educação (ex: Alura, MDN, Stack Overflow). 
+Garante que o link seja funcional e trate especificamente do termo pesquisado ou de sua área tecnológica.
 
 JSON_RECOMENDACAO:
 [
