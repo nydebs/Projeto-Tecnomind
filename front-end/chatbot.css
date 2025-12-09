@@ -360,9 +360,22 @@ select{
 }
 
 .perguntas-historico{
-    max-height: 40vh;
+    max-height: 50px;
     overflow-y: auto;
     padding-right: 10px;
+}
+
+.perguntas-historico::-webkit-scrollbar {
+    width: 6px;
+}
+
+.perguntas-historico::-webkit-scrollbar-thumb {
+    background-color: #2400C5; /* Cor padrão do Tecnomind */
+    border-radius: 10px;
+}
+
+.perguntas-historico::-webkit-scrollbar-track {
+    background: #f1f1f1;
 }
 
 .perguntas-historico ul{
