@@ -344,8 +344,13 @@ function atualizarCardsDinamicos(listaDados) {
             // 3. Configura o link de redirecionamento no stretched-link [cite: 187, 190]
             const linkBtn = currentCard.querySelector('.card-link');
             if (linkBtn) {
+                try {
+                new URL(dadosItem.link);
                 linkBtn.href = dadosItem.link;
-                // Como você usa stretched-link, clicar no card já acionará este link
+                } catch (e) {
+                    console.warn("Link inválido fornecido pela IA:", dadosItem.link);
+                    linkBtn.href = "https://www.google.com/search?q=" + encodeURIComponent(dadosItem.titulo);
+                }
             }
 
             // 4. Feedback visual de interatividade (UX) [cite: 164, 204]
