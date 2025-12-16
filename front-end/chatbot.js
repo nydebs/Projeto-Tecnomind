@@ -325,7 +325,7 @@ const imagensEstaticas = {
 };
 
 function atualizarCardsDinamicos(listaDados) {
-    // Seleciona todos os cards pela classe (deve haver 3 no seu HTML)
+    // Seleciona todos os cards pela classe 
     const cards = document.querySelectorAll('.card_recomendado'); 
 
     listaDados.forEach((dadosItem, index) => {
@@ -336,12 +336,12 @@ function atualizarCardsDinamicos(listaDados) {
             // 1. Define a imagem estática baseada na categoria 
             const rotaImagem = imagensEstaticas[dadosItem.categoria] || './img/imgpadrao.png';
             
-            // 2. Atualiza o conteúdo visual dentro do card atual [cite: 181]
+            // 2. Atualiza o conteúdo visual dentro do card atual 
             currentCard.querySelector('.card-img').src = rotaImagem;
             currentCard.querySelector('.card-title').innerText = dadosItem.titulo;
             currentCard.querySelector('.card-text').innerText = dadosItem.resumo;
 
-            // 3. Configura o link de redirecionamento no stretched-link [cite: 187, 190]
+            // 3. Configura o link de redirecionamento no stretched-link 
             const linkBtn = currentCard.querySelector('.card-link');
             if (linkBtn) {
                 try {
@@ -353,7 +353,7 @@ function atualizarCardsDinamicos(listaDados) {
                 }
             }
 
-            // 4. Feedback visual de interatividade (UX) [cite: 164, 204]
+            // 4. Feedback visual de interatividade 
             currentCard.style.cursor = 'pointer';
         }
     });
